@@ -61,14 +61,14 @@ namespace Asteroids
             
             _context = BufferedGraphicsManager.Current;
             g = form.CreateGraphics();
-
+            
             // Создаем объект (поверхность рисования) и связываем его с формой
             // Запоминаем размеры формы
-            Width = form.Width;
-            Height = form.Height;
+            Width = 800; // form.Width;
+            Height = 600; // form.Height;
 
             // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
-            Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
+            Buffer = _context.Allocate(g, new Rectangle(10, 10, Width, Height));
 
             Load();
 
@@ -121,7 +121,7 @@ namespace Asteroids
         /// </summary>
         public static void Load()
         {
-            _objs = new BaseObject[100];
+            _objs = new BaseObject[60];
             
             for (int i = 0; i < _objs.Length / 4; i++)
                 _objs[i] = new BaseObject(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(5, 5));

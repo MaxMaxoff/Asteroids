@@ -10,11 +10,21 @@ using System.Windows.Forms;
 
 namespace Asteroids
 {
-    public partial class Form1 : Form
+    public partial class fmMain : Form
     {
-        public Form1()
+        public fmMain()
         {
             InitializeComponent();
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
