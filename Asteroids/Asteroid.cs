@@ -10,7 +10,6 @@ namespace Asteroids
     class Asteroid : BaseObject
     {
         static Image image = Asteroids.Properties.Resources._3rQK96czs_NJxy4PjmC1hQ;
-        static Rectangle rect;
 
         public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
@@ -21,7 +20,25 @@ namespace Asteroids
         /// </summary>
         public override void Draw()
         {
-            Game.Buffer.Graphics.DrawImage(image, Pos.X, Pos.Y);
+            SplashScreen.Buffer.Graphics.DrawImage(image, Pos.X, Pos.Y);
+        }
+
+        public override void Update()
+        {
+            Pos.X = Pos.X + Dir.X;
+            Pos.Y = Pos.Y + Dir.Y;
+
+            if (Pos.X <= 0 || Pos.X >= SplashScreen.Width || Pos.Y <= 0 || Pos.Y >= SplashScreen.Height)
+            {
+                Pos.X = SplashScreen.StartX;
+                Pos.Y = SplashScreen.StartY;
+                do
+                {
+                    Dir.X = SplashScreen.rnd.Next(-SplashScreen.Speed, SplashScreen.Speed);
+                    Dir.Y = SplashScreen.rnd.Next(-SplashScreen.Speed, SplashScreen.Speed);    
+                } while (Dir.X == 0 && Dir.Y == 0);
+                
+            }
         }
     }
 }

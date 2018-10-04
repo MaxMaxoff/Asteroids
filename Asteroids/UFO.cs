@@ -18,9 +18,9 @@ namespace Asteroids
         /// </summary>
         public override void Draw()
         {
-            Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + Size.Width, Pos.Y + Size.Height);
-            Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + Size.Width, Pos.Y, Pos.X, Pos.Y + Size.Height);
-            Game.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X, Pos.Y, Size.Width, Size.Height);
+            SplashScreen.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X, Pos.Y, Size.Width * 2, Size.Height / 2);
+            SplashScreen.Buffer.Graphics.FillEllipse(Brushes.White, Pos.X, Pos.Y, Size.Width * 2, Size.Height / 2);
+            SplashScreen.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X + Size.Width / 2, Pos.Y - Size.Height / 4 * 3, Size.Height, Size.Width);
         }
 
         /// <summary>
@@ -28,15 +28,18 @@ namespace Asteroids
         /// </summary>
         public override void Update()
         {
-            Pos.X = Pos.X + Dir.X + Game.rnd.Next(0, 10);;
-            Pos.Y = Pos.Y + Dir.Y + Game.rnd.Next(0, 10);;
+            Pos.X = Pos.X + Dir.X + SplashScreen.rnd.Next(0, 10);;
+            Pos.Y = Pos.Y + Dir.Y + SplashScreen.rnd.Next(0, 10);;
 
-            if (Pos.X <= 0 || Pos.X >= Game.Width || Pos.Y <= 0 || Pos.Y >= Game.Height)
+            if (Pos.X <= 0 || Pos.X >= SplashScreen.Width || Pos.Y <= 0 || Pos.Y >= SplashScreen.Height)
             {
-                Pos.X = Game.Width / 2 + Game.rnd.Next(0, 3);
-                Pos.Y = Game.Height / 2 + Game.rnd.Next(0, 3);
-                Dir.X = Game.rnd.Next(0, Game.Speed + 1) - Game.Speed / 2;
-                Dir.Y = Game.rnd.Next(0, Game.Speed + 1) - Game.Speed / 2;
+                Pos.X = SplashScreen.StartX;
+                Pos.Y = SplashScreen.StartY;
+                do
+                {
+                    Dir.X = SplashScreen.rnd.Next(-SplashScreen.Speed, SplashScreen.Speed);
+                    Dir.Y = SplashScreen.rnd.Next(-SplashScreen.Speed, SplashScreen.Speed);    
+                } while (Dir.X == 0 && Dir.Y == 0);
             }
         }
     }

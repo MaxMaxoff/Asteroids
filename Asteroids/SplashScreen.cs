@@ -4,24 +4,49 @@ using System.Windows.Forms;
 
 namespace Asteroids
 {
-    static class Game
+    class SplashScreen
     {
-        
+
         private static BufferedGraphicsContext _context;
         public static BufferedGraphics Buffer;
-        
+
         /// <summary>
-        /// Properties of game field
+        /// Properties of SplashScreen field
         /// </summary>
         public static int Width { get; set; }
         public static int Height { get; set; }
 
         public static Random rnd;
+
+
+        /// <summary>
+        /// Property start X
+        /// </summary>
+        public static int StartX
+        {
+            get { return Width / 2 + rnd.Next(-20, 21); }
+        }
+
+        /// <summary>
+        /// Property start Y
+        /// </summary>
+        public static int StartY
+        {
+            get { return Height / 2 + rnd.Next(-20, 21); }
+        }
+        
+        /// <summary>
+        /// Property Speed
+        /// </summary>
+        public static int Speed
+        {
+            get { return (Width + Height) / 60; }
+        }
         
         /// <summary>
         /// Default ctor
         /// </summary>
-        static Game()
+        static SplashScreen()
         {
             rnd = new Random();
         }
@@ -36,14 +61,14 @@ namespace Asteroids
             
             _context = BufferedGraphicsManager.Current;
             g = form.CreateGraphics();
-
+            
             // Создаем объект (поверхность рисования) и связываем его с формой
             // Запоминаем размеры формы
-            Width = form.Width;
-            Height = form.Height;
+            Width = 800; // form.Width;
+            Height = 600; // form.Height;
 
             // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
-            Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
+            Buffer = _context.Allocate(g, new Rectangle(10, 10, Width, Height));
 
             Load();
 
@@ -70,12 +95,6 @@ namespace Asteroids
         /// </summary>
         public static void Draw()
         {
-            // Проверяем вывод графики
-            //Buffer.Graphics.Clear(Color.Black);
-            //Buffer.Graphics.DrawRectangle(Pens.White, new Rectangle(100, 100, 200, 200));
-            //Buffer.Graphics.FillEllipse(Brushes.Wheat, new Rectangle(100, 100, 200, 200));
-            //Buffer.Render();
-
             Buffer.Graphics.Clear(Color.Black);
             foreach (BaseObject obj in _objs)
                 obj.Draw();
@@ -102,13 +121,22 @@ namespace Asteroids
         /// </summary>
         public static void Load()
         {
-            _objs = new BaseObject[100];
+            int qty = 60;
+            _objs = new BaseObject[qty + 1];
             
-            _objs = new BaseObject[30];
-            for (int i = 0; i < _objs.Length / 2; i++)
-                _objs[i] = new BaseObject(new Point(600, i * 20), new Point(-i, -i), new Size(rnd.Next(10), rnd.Next(10)));
-            for (int i = _objs.Length / 2; i < _objs.Length; i++)
-                _objs[i] = new Star(new Point(600, i * 20), new Point(-i, 0), new Size(rnd.Next(10), rnd.Next(10)));
+            for (int i = 0; i < _objs.Length / 4; i++)
+                _objs[i] = new BaseObject(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(5, 5));
+
+            for (int i = _objs.Length / 4; i < _objs.Length / 4 * 2; i++)
+                _objs[i] = new Star(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(3, 3));
+
+            for (int i = _objs.Length / 4 * 2; i < _objs.Length / 4 * 3; i++)
+                _objs[i] = new UFO(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(10, 10));
+
+            for (int i = _objs.Length / 4 * 3; i < _objs.Length; i++)
+                _objs[i] = new Asteroid(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(6, 8));
+
+            _objs[qty] = new SplashScreenLabels(new Point(0, 0), new Point(0, 0), new Size(0, 0));
         }
     }
 }
