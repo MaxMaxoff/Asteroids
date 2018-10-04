@@ -121,7 +121,8 @@ namespace Asteroids
         /// </summary>
         public static void Load()
         {
-            _objs = new BaseObject[61];
+            int qty = 60;
+            _objs = new BaseObject[qty + 1];
             
             for (int i = 0; i < _objs.Length / 4; i++)
                 _objs[i] = new BaseObject(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(5, 5));
@@ -135,7 +136,7 @@ namespace Asteroids
             for (int i = _objs.Length / 4 * 3; i < _objs.Length; i++)
                 _objs[i] = new Asteroid(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(6, 8));
 
-            _objs[60] = new SplashScreenLabels(new Point(0, 0), new Point(0, 0), new Size(0, 0));
+            _objs[qty] = new SplashScreenLabels(new Point(0, 0), new Point(0, 0), new Size(0, 0));
         }
     }
 }
