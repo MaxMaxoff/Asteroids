@@ -1,4 +1,6 @@
-﻿namespace Asteroids
+﻿using System.Drawing;
+
+namespace Asteroids
 {
     partial class fmMain
     {
