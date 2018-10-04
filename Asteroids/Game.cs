@@ -9,20 +9,12 @@ namespace Asteroids
         
         private static BufferedGraphicsContext _context;
         public static BufferedGraphics Buffer;
-
-        private static int speed;
-
+        
         /// <summary>
         /// Properties of game field
         /// </summary>
         public static int Width { get; set; }
         public static int Height { get; set; }
-
-        public static int Speed
-        {
-            get { return speed; }
-            set { speed = value; }
-        }
 
         public static Random rnd;
         
@@ -49,7 +41,6 @@ namespace Asteroids
             // Запоминаем размеры формы
             Width = form.Width;
             Height = form.Height;
-            Speed = (Width + Height) / 30;
 
             // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
             Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
@@ -112,18 +103,12 @@ namespace Asteroids
         public static void Load()
         {
             _objs = new BaseObject[100];
-
-            for (int i = 0; i < _objs.Length / 4; i++)
-                _objs[i] = new BaseObject(new Point(Width / 2, Height / 2), new Point(rnd.Next(0, 20) - 10, rnd.Next(0, 20) - 10), new Size(2, 2));
-
-            for (int i = _objs.Length / 4; i < _objs.Length / 4 * 2; i++)
-                _objs[i] = new Star(new Point(Width / 2, Height / 2), new Point(Game.rnd.Next(0, Speed + 1) - Speed / 2, Game.rnd.Next(0, Speed + 1) - Speed / 2), new Size(3, 3));
-
-            for (int i = _objs.Length / 4 * 2; i < _objs.Length / 4 * 3; i++)
-                _objs[i] = new UFO(new Point(Width / 2, Height / 2), new Point(Game.rnd.Next(0, Speed + 1) - Speed / 2, Game.rnd.Next(0, Speed + 1) - Speed / 2), new Size(6, 8));
-
-            for (int i = _objs.Length / 4 * 3; i < _objs.Length; i++)
-                _objs[i] = new Asteroid(new Point(Width / 2, Height / 2), new Point(Game.rnd.Next(0, Speed + 1) - Speed / 2, Game.rnd.Next(0, Speed + 1) - Speed / 2), new Size(6, 8));
+            
+            _objs = new BaseObject[30];
+            for (int i = 0; i < _objs.Length / 2; i++)
+                _objs[i] = new BaseObject(new Point(600, i * 20), new Point(-i, -i), new Size(rnd.Next(10), rnd.Next(10)));
+            for (int i = _objs.Length / 2; i < _objs.Length; i++)
+                _objs[i] = new Star(new Point(600, i * 20), new Point(-i, 0), new Size(rnd.Next(10), rnd.Next(10)));
         }
     }
 }

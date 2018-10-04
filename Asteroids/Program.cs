@@ -15,10 +15,14 @@ namespace Asteroids
             form.Width = 800;
             form.Height = 600;
 
-            Game.Init(form);
-            form.Show();
+            //Game.Init(form);
+            //form.Show();
+            //Game.Draw();
+            //Application.Run(form);
 
-            Game.Draw();
+            SplashScreen.Init(form);
+            form.Show();
+            SplashScreen.Draw();
             Application.Run(form);
 
             //Application.EnableVisualStyles();
