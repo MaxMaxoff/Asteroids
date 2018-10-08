@@ -54,6 +54,7 @@
     <Compile Include="fmMain.Designer.cs">
       <DependentUpon>fmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Objects\Bullet.cs" />
     <Compile Include="Objects\Circle.cs" />
     <Compile Include="Objects\Transport.cs" />
     <Compile Include="Program.cs" />

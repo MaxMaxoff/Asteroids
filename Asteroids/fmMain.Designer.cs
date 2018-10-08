@@ -81,6 +81,8 @@ namespace Asteroids
             this.Text = "Asteroids";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fmMain_KeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fmMain_KeyPress);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.fmMain_KeyUp);
             this.ResumeLayout(false);
 
         }
