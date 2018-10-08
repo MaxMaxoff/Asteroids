@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Asteroids.Objects;
 
 namespace Asteroids
 {
     class SplashScreen
     {
-
         private static BufferedGraphicsContext _context;
         public static BufferedGraphics Buffer;
 
@@ -24,7 +24,8 @@ namespace Asteroids
         /// </summary>
         public static int StartX
         {
-            get { return Width / 2 + rnd.Next(-20, 21); }
+            //get { return Width / 2 + rnd.Next(-20, 21); }
+            get { return Width; }
         }
 
         /// <summary>
@@ -32,7 +33,8 @@ namespace Asteroids
         /// </summary>
         public static int StartY
         {
-            get { return Height / 2 + rnd.Next(-20, 21); }
+            //get { return Height / 2 + rnd.Next(-20, 21); }
+            get { return rnd.Next(20, Height - 40); }
         }
         
         /// <summary>
@@ -98,8 +100,8 @@ namespace Asteroids
             Buffer.Graphics.Clear(Color.Black);
             foreach (BaseObject obj in _objs)
                 obj.Draw();
-            Buffer.Render();
 
+            Buffer.Render();
         }
 
         /// <summary>
@@ -121,22 +123,33 @@ namespace Asteroids
         /// </summary>
         public static void Load()
         {
-            int qty = 60;
-            _objs = new BaseObject[qty + 1];
-            
-            for (int i = 0; i < _objs.Length / 4; i++)
-                _objs[i] = new BaseObject(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(5, 5));
+            int qty = 40;
+            int qtyTypes = 4;
 
-            for (int i = _objs.Length / 4; i < _objs.Length / 4 * 2; i++)
-                _objs[i] = new Star(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(3, 3));
+            int qtyObjects = qty / qtyTypes;
+            _objs = new BaseObject[qty + 3];
 
-            for (int i = _objs.Length / 4 * 2; i < _objs.Length / 4 * 3; i++)
-                _objs[i] = new UFO(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(10, 10));
+            for (int i = 0; i < qtyObjects; i++)
+            {
+                _objs[i] = new Star(new Point(StartX, StartY),
+                    new Point(SplashScreen.rnd.Next(Speed), 0),
+                    new Size(3, 3));
 
-            for (int i = _objs.Length / 4 * 3; i < _objs.Length; i++)
-                _objs[i] = new Asteroid(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(6, 8));
+                _objs[i + qtyObjects] = new Circle(new Point(StartX, StartY),
+                    new Point(SplashScreen.rnd.Next(Speed), 0),
+                    new Size(5, 5));
+
+                _objs[i + qtyObjects * 2] = new UFO(new Point(StartX, StartY),
+                    new Point(SplashScreen.rnd.Next(Speed), 0),
+                    new Size(10, 10));
+
+                _objs[i + qtyObjects * 3] = new Asteroid(new Point(StartX, StartY),
+                    new Point(SplashScreen.rnd.Next(Speed), 0),
+                    new Size(6, 8));
+            }
 
             _objs[qty] = new SplashScreenLabels(new Point(0, 0), new Point(0, 0), new Size(0, 0));
+            _objs[qty + 1] = new Transport(new Point(Height / 2, 20), new Point(0, 0), new Size(64, 64));
         }
     }
 }

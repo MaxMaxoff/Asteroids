@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
 
 namespace Employees
 {
-    public abstract class Employee
+    public abstract class Employee : IComparable<Employee>
     {
         /// <summary>
         /// Properties Name
@@ -55,30 +52,32 @@ namespace Employees
         public abstract float MonthlySalary();
 
         /// <summary>
-        /// Default ctor
+        /// Override Method ToString
         /// </summary>
-        public Employee()
+        /// <returns>Default string for Employee</returns>
+        public override string ToString()
         {
-            
+            return $"Имя: {Name}; ТН {Number}; Должность: {Position}; ЗП: {MonthlySalary()}";
+        }
+
+        public int CompareTo(Employee obj)
+        {
+            return MonthlySalary() > obj.MonthlySalary() ? -1 : 1;
         }
 
         /// <summary>
         /// Default ctor
         /// </summary>
         /// <param name="name">Employee Name</param>
-        /// <param name="birthday">Employee Birthday</param>
-        /// <param name="sex">Sex: false (0) - female, true (1) - male</param>
         /// <param name="number">Employee Number</param>
-        /// <param name="startDate">Start work date</param>
         /// <param name="position">Current position</param>
-        public Employee(string name, DateTime birthday, bool sex, int number, DateTime startDate, string position)
+        /// <param name="salary">base salary</param>
+        public Employee(string name, int number, string position, int salary)
         {
             Name = name;
-            Birthday = birthday;
-            Sex = sex;
             Number = number;
-            StartDate = startDate;
             Position = position;
+            Salary = salary;
         }
     }
 }

@@ -46,34 +46,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Asteroid.cs" />
-    <Compile Include="BaseObject.cs" />
+    <Compile Include="Objects\Asteroid.cs" />
+    <Compile Include="Objects\BaseObject.cs" />
     <Compile Include="fmMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="fmMain.Designer.cs">
       <DependentUpon>fmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game.cs" />
+    <Compile Include="Objects\Circle.cs" />
+    <Compile Include="Objects\Transport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SplashScreen.cs" />
-    <Compile Include="SplashScreenLabels.cs" />
-    <Compile Include="Star.cs" />
-    <Compile Include="UFO.cs" />
+    <Compile Include="Objects\SplashScreenLabels.cs" />
+    <Compile Include="Objects\Star.cs" />
+    <Compile Include="Objects\UFO.cs" />
     <EmbeddedResource Include="fmMain.resx">
       <DependentUpon>fmMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -88,10 +89,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Image.bmp" />
+    <None Include="Resources\848502_transport_512x512.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\3rQK96czs-NJxy4PjmC1hQ.jpg" />
+    <None Include="Resources\aster1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\aster2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\aster3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\aster4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

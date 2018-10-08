@@ -37,27 +37,31 @@ namespace Asteroids
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(820, 12);
+            this.btnStart.Enabled = false;
+            this.btnStart.Location = new System.Drawing.Point(816, 12);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(86, 23);
+            this.btnStart.Size = new System.Drawing.Size(96, 23);
             this.btnStart.TabIndex = 0;
             this.btnStart.Text = "Начало игры";
             this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // btnRecords
             // 
-            this.btnRecords.Location = new System.Drawing.Point(820, 41);
+            this.btnRecords.Enabled = false;
+            this.btnRecords.Location = new System.Drawing.Point(816, 41);
             this.btnRecords.Name = "btnRecords";
-            this.btnRecords.Size = new System.Drawing.Size(86, 23);
+            this.btnRecords.Size = new System.Drawing.Size(96, 23);
             this.btnRecords.TabIndex = 1;
             this.btnRecords.Text = "Рекорды";
             this.btnRecords.UseVisualStyleBackColor = true;
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(820, 70);
+            this.btnExit.Enabled = false;
+            this.btnExit.Location = new System.Drawing.Point(816, 70);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(86, 23);
+            this.btnExit.Size = new System.Drawing.Size(96, 23);
             this.btnExit.TabIndex = 2;
             this.btnExit.Text = "Выход";
             this.btnExit.UseVisualStyleBackColor = true;
@@ -67,13 +71,16 @@ namespace Asteroids
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(916, 621);
+            this.ClientSize = new System.Drawing.Size(924, 621);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnRecords);
             this.Controls.Add(this.btnStart);
+            this.KeyPreview = true;
             this.Name = "fmMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Asteroids";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fmMain_KeyDown);
             this.ResumeLayout(false);
 
         }

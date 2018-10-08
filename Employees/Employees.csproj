@@ -46,6 +46,7 @@
     <Compile Include="Employee.cs" />
     <Compile Include="Employees.cs" />
     <Compile Include="HREmployee.cs" />
+    <Compile Include="Interfaces\IEmployee.cs" />
     <Compile Include="MREmployee.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -16,5 +16,7 @@ namespace Asteroids
             SplashScreen.Buffer.Graphics.DrawString("Автор: Максим Торопов", new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular), new SolidBrush(Color.Aqua), 500, 10);
         }
 
+        public override void Update()
+        {}
     }
 }
