@@ -37,8 +37,10 @@ namespace Asteroids
             // 
             // btnStart
             // 
-            this.btnStart.Enabled = false;
-            this.btnStart.Location = new System.Drawing.Point(816, 12);
+            this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStart.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnStart.Location = new System.Drawing.Point(12, 12);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(96, 23);
             this.btnStart.TabIndex = 0;
@@ -48,8 +50,10 @@ namespace Asteroids
             // 
             // btnRecords
             // 
-            this.btnRecords.Enabled = false;
-            this.btnRecords.Location = new System.Drawing.Point(816, 41);
+            this.btnRecords.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRecords.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnRecords.Location = new System.Drawing.Point(12, 40);
             this.btnRecords.Name = "btnRecords";
             this.btnRecords.Size = new System.Drawing.Size(96, 23);
             this.btnRecords.TabIndex = 1;
@@ -58,8 +62,10 @@ namespace Asteroids
             // 
             // btnExit
             // 
-            this.btnExit.Enabled = false;
-            this.btnExit.Location = new System.Drawing.Point(816, 70);
+            this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnExit.Location = new System.Drawing.Point(12, 69);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(96, 23);
             this.btnExit.TabIndex = 2;
@@ -71,7 +77,7 @@ namespace Asteroids
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(924, 621);
+            this.ClientSize = new System.Drawing.Size(120, 101);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnRecords);
             this.Controls.Add(this.btnStart);
@@ -79,6 +85,7 @@ namespace Asteroids
             this.Name = "fmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Asteroids";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.fmMain_FormClosing);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fmMain_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fmMain_KeyPress);

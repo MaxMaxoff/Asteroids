@@ -17,6 +17,8 @@ namespace Asteroids
         public static int Width { get; set; }
         public static int Height { get; set; }
 
+        public static Timer timer = new Timer {Interval = 30};
+
         /// <summary>
         /// Property of Object
         /// </summary>
@@ -52,7 +54,7 @@ namespace Asteroids
         public static int Speed
         {
             //get { return (Width + Height) / 60; }
-            get { return TypicalSize * 3; }
+            get { return TypicalSize; }
         }
         
         /// <summary>
@@ -76,17 +78,16 @@ namespace Asteroids
             
             // Создаем объект (поверхность рисования) и связываем его с формой
             // Запоминаем размеры формы
-            Width = 800; // form.Width;
-            Height = 600; // form.Height;
+            Width = form.Width - 40;
+            Height = form.Height - 60;
 
             // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
             Buffer = _context.Allocate(g, new Rectangle(10, 10, Width, Height));
 
             Load();
-
-            Timer timer = new Timer {Interval = 50};
+            
             timer.Start();
-            timer.Tick += Timer_Tick;
+            
 
         }
 
@@ -96,7 +97,7 @@ namespace Asteroids
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void Timer_Tick(object sender, EventArgs e)
+        public static void Timer_Tick(object sender, EventArgs e)
         {
             Draw();
             Update();
@@ -125,12 +126,20 @@ namespace Asteroids
             }
             catch (Exception e)
             {
-                //Console.WriteLine(e);
-                //throw;
+                Console.WriteLine(e);
+                // throw;
             }
 
-
-            Buffer.Render();
+            try
+            {
+                Buffer.Render();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                // throw;
+            }
+            
         }
 
         /// <summary>
@@ -154,11 +163,9 @@ namespace Asteroids
             }
             catch (Exception e)
             {
-                //Console.WriteLine(e);
-                //throw;
+                Console.WriteLine(e);
+                // throw;
             }
-            
-
         }
 
         /// <summary>
