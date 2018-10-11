@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
+using Asteroids.Interfaces;
 
 namespace Asteroids
 {
@@ -28,8 +24,8 @@ namespace Asteroids
         /// </summary>
         public override void Update()
         {
-            Pos.X = Pos.X + Dir.X + SplashScreen.rnd.Next(0, 10);;
-            Pos.Y = Pos.Y + Dir.Y + SplashScreen.rnd.Next(0, 10);;
+            Pos.X = Pos.X + Dir.X + SplashScreen.rnd.Next(-5, 5);
+            Pos.Y = Pos.Y + Dir.Y;
 
             if (Pos.X <= 0 || Pos.X >= SplashScreen.Width || Pos.Y <= 0 || Pos.Y >= SplashScreen.Height)
             {

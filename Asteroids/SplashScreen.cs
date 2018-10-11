@@ -23,22 +23,19 @@ namespace Asteroids
         public static Timer timer = new Timer {Interval = 30};
 
         /// <summary>
-        /// Property of Object
+        /// Game Score and lives
         /// </summary>
-        public static int TypicalSize
-        {
-            get { return rnd.Next(1, 11); }
-        }
+        public static int score;
+        public static int health;
+        public const int baseHealth = 100;
 
         public static Random rnd;
-
 
         /// <summary>
         /// Property start X
         /// </summary>
         public static int StartX
         {
-            //get { return Width / 2 + rnd.Next(-20, 21); }
             get { return Width; }
         }
 
@@ -47,7 +44,6 @@ namespace Asteroids
         /// </summary>
         public static int StartY
         {
-            //get { return Height / 2 + rnd.Next(-20, 21); }
             get { return rnd.Next(20, Height - 40); }
         }
         
@@ -56,8 +52,7 @@ namespace Asteroids
         /// </summary>
         public static int Speed
         {
-            //get { return (Width + Height) / 60; }
-            get { return TypicalSize; }
+            get { return rnd.Next(1, 6); }
         }
         
         /// <summary>
@@ -79,19 +74,12 @@ namespace Asteroids
             _context = BufferedGraphicsManager.Current;
             g = form.CreateGraphics();
             
-            // Создаем объект (поверхность рисования) и связываем его с формой
-            // Запоминаем размеры формы
             Width = form.Width - 40;
             Height = form.Height - 60;
 
-            // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
             Buffer = _context.Allocate(g, new Rectangle(10, 10, Width, Height));
 
             Load();
-            
-            timer.Start();
-            
-
         }
 
         /// <summary>
@@ -161,6 +149,80 @@ namespace Asteroids
 
             try
             {
+                foreach (BaseObject obj in _objsInteraction)
+                {
+                    obj.Update();
+                    foreach (BaseObject bullet in _objsBullets)
+                    {
+                        if (obj.Collision(bullet))
+                        {
+                            _objsInteraction.RemoveAt(_objsInteraction.IndexOf(obj));
+
+                            if (obj is Asteroid)
+                                AddAsteroid(1);
+                            else if (obj is UFO)
+                                AddUFO(1);
+                            else if (obj is Healthy)
+                                AddHealthy(1);
+
+                            _objsBullets.RemoveAt(_objsBullets.IndexOf(bullet));
+                            score++;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                // throw;
+            }
+
+            try
+            {
+                foreach (BaseObject obj in _objsInteraction)
+                {
+                    obj.Update();
+                    foreach (BaseObject transport in _objsTranspost)
+                    {
+                        if (obj.Collision(transport))
+                        {
+                            _objsInteraction.RemoveAt(_objsInteraction.IndexOf(obj));
+                            if (obj is Asteroid)
+                            {
+                                health -= 50;
+                                AddAsteroid(1);
+                            }
+                            else if (obj is UFO)
+                            {
+                                health -= 20;
+                                AddUFO(1);
+                            }
+                            else if (obj is Healthy)
+                            {
+                                health += 10;
+                                if (health > baseHealth) health = baseHealth;
+                                AddHealthy(1);
+                            }
+
+                            if (health <= 0)
+                            {
+                                _objsTranspost.RemoveAt(_objsTranspost.IndexOf(transport));
+                                Form.ActiveForm.Close();
+                            }
+
+                            score++;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                // throw;
+            }
+
+            try
+            {
                 foreach (BaseObject obj in _objsBullets)
                     obj.Update();
             }
@@ -185,45 +247,93 @@ namespace Asteroids
         /// </summary>
         public static void Load()
         {
+            score = 0;
+            health = baseHealth;
+
             _objsBackgound = new List<BaseObject>();
+            AddStar(15);
+            AddCircle(15);
+
             _objsBullets = new List<BaseObject>();
+            
             _objsInteraction = new List<BaseObject>();
+            AddUFO(7);
+            AddAsteroid(8);
+            
             _objsTranspost = new List<BaseObject>();
+            AddTransport();
 
-            int qty = 40;
-            int qtyTypes = 4;
-
-            int qtyObjects = qty / qtyTypes;
-
-            for (int i = 0; i < 15; i++)
-            {
-                _objsBackgound.Add(new Star(new Point(StartX, StartY),
-                    new Point(SplashScreen.rnd.Next(TypicalSize), 0),
-                    new Size(3, 3)));
-
-                _objsBackgound.Add(new Circle(new Point(StartX, StartY),
-                    new Point(SplashScreen.rnd.Next(Speed), 0),
-                    new Size(5, 5)));
-            }
-
-            for (int i = 0; i < 7; i++)
-            {
-                _objsInteraction.Add(new UFO(new Point(StartX, StartY),
-                    new Point(SplashScreen.rnd.Next(Speed), 0),
-                    new Size(10, 10)));
-            }
-
-            for (int i = 0; i < 8; i++)
-            {
-            _objsInteraction.Add(new Asteroid(new Point(StartX, StartY),
-                    new Point(SplashScreen.rnd.Next(Speed), 0),
-                    new Size(6, 8)));
-            }
+            AddHealthy(1);
 
             _objsBackgound.Add(new SplashScreenLabels(new Point(0, 0), new Point(0, 0), new Size(0, 0)));
-            _objsTranspost.Add(new Transport(new Point(Height / 2, 20), new Point(0, 0), new Size(64, 64)));
-            //_objsBullets.Add(new Bullet(new Point(Transport.positionX + 65, Transport.positionY + 32),
-            //    new Point(Transport.positionX + 65, Transport.positionY + 32), new Size(5, 5)));
+        }
+
+        /// <summary>
+        /// Method Add Star
+        /// </summary>
+        /// <param name="n">qty of Stars</param>
+        public static void AddStar(int n)
+        {
+            for(int i = 0; i < n; i++)
+            _objsBackgound.Add(new Star(new Point(StartX, StartY),
+                new Point(rnd.Next(Speed), 0),
+                new Size(3, 3)));
+        }
+
+        /// <summary>
+        /// Method Add Circle
+        /// </summary>
+        /// <param name="n">qty of Circles</param>
+        public static void AddCircle(int n)
+        {
+            for (int i = 0; i < n; i++)
+                _objsBackgound.Add(new Circle(new Point(StartX, StartY),
+                    new Point(rnd.Next(Speed), 0),
+                    new Size(5, 5)));
+        }
+
+        /// <summary>
+        /// Method Add UFO
+        /// </summary>
+        /// <param name="n">qty of UFOs</param>
+        public static void AddUFO(int n)
+        {
+            for (int i = 0; i < n; i++)
+                _objsInteraction.Add(new UFO(new Point(StartX, StartY),
+                    new Point(rnd.Next(Speed), 0),
+                    new Size(10, 10)));
+        }
+
+        /// <summary>
+        /// Method Add Asteroid
+        /// </summary>
+        /// <param name="n">qty of Asteroids</param>
+        public static void AddAsteroid(int n)
+        {
+            for (int i = 0; i < n; i++)
+                _objsInteraction.Add(new Asteroid(new Point(StartX, StartY),
+                    new Point(rnd.Next(Speed), 0),
+                    new Size(64, 64)));
+        }
+
+        /// <summary>
+        /// Method Add Healthy objects
+        /// </summary>
+        /// <param name="n">qty of healthu objects</param>
+        public static void AddHealthy(int n)
+        {
+            for (int i = 0; i < n; i++)
+                _objsInteraction.Add(new Healthy(new Point(StartX, StartY),
+                    new Point(rnd.Next(Speed), 0),
+                    new Size(43, 43)));
+        }
+
+        /// <summary>
+        /// Method Add transport
+        /// </summary>
+        public static void AddTransport()
+        {
+            _objsTranspost.Add(new Transport(new Point(20, Height / 2), new Point(0, 0), new Size(64, 64)));
         }
     }
 }

@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\ICollision.cs" />
+    <Compile Include="Objects\Healthy.cs" />
     <Compile Include="Objects\Asteroid.cs" />
     <Compile Include="Objects\BaseObject.cs" />
     <Compile Include="fmMain.cs">
@@ -103,6 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\aster4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\health.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
