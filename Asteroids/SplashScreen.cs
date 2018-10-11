@@ -17,6 +17,9 @@ namespace Asteroids
         public static int Width { get; set; }
         public static int Height { get; set; }
 
+        /// <summary>
+        /// Timer for Update Graphics
+        /// </summary>
         public static Timer timer = new Timer {Interval = 30};
 
         /// <summary>
