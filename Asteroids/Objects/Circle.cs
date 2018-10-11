@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
-namespace Asteroids
+namespace Asteroids.Objects
 {
-    class Asteroid : BaseObject
+    class Circle : BaseObject
     {
-        static Image image = Asteroids.Properties.Resources._3rQK96czs_NJxy4PjmC1hQ;
-
-        public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size)
+        /// <summary>
+        /// Default ctor for Circle
+        /// </summary>
+        /// <param name="pos">position</param>
+        /// <param name="dir">direction</param>
+        /// <param name="size">size of object</param>
+        public Circle(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
         }
 
@@ -20,7 +19,7 @@ namespace Asteroids
         /// </summary>
         public override void Draw()
         {
-            SplashScreen.Buffer.Graphics.DrawImage(image, Pos.X, Pos.Y);
+            SplashScreen.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X, Pos.Y, Size.Width, Size.Height);
         }
 
         public override void Update()
@@ -35,9 +34,8 @@ namespace Asteroids
                 do
                 {
                     Dir.X = SplashScreen.rnd.Next(-SplashScreen.Speed, SplashScreen.Speed);
-                    Dir.Y = SplashScreen.rnd.Next(-SplashScreen.Speed, SplashScreen.Speed);    
+                    // Dir.Y = SplashScreen.rnd.Next(-SplashScreen.Speed, SplashScreen.Speed);    
                 } while (Dir.X == 0 && Dir.Y == 0);
-                
             }
         }
     }

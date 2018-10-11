@@ -35,7 +35,7 @@ namespace Asteroids
                 do
                 {
                     Dir.X = SplashScreen.rnd.Next(-SplashScreen.Speed, SplashScreen.Speed);
-                    Dir.Y = SplashScreen.rnd.Next(-SplashScreen.Speed, SplashScreen.Speed);    
+                    // Dir.Y = SplashScreen.rnd.Next(-SplashScreen.Speed, SplashScreen.Speed);    
                 } while (Dir.X == 0 && Dir.Y == 0);
             }
         }

@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Asteroids.Objects;
 
 namespace Asteroids
 {
     class SplashScreen
     {
-
         private static BufferedGraphicsContext _context;
         public static BufferedGraphics Buffer;
 
@@ -16,6 +17,16 @@ namespace Asteroids
         public static int Width { get; set; }
         public static int Height { get; set; }
 
+        public static Timer timer = new Timer {Interval = 30};
+
+        /// <summary>
+        /// Property of Object
+        /// </summary>
+        public static int TypicalSize
+        {
+            get { return rnd.Next(1, 11); }
+        }
+
         public static Random rnd;
 
 
@@ -24,7 +35,8 @@ namespace Asteroids
         /// </summary>
         public static int StartX
         {
-            get { return Width / 2 + rnd.Next(-20, 21); }
+            //get { return Width / 2 + rnd.Next(-20, 21); }
+            get { return Width; }
         }
 
         /// <summary>
@@ -32,7 +44,8 @@ namespace Asteroids
         /// </summary>
         public static int StartY
         {
-            get { return Height / 2 + rnd.Next(-20, 21); }
+            //get { return Height / 2 + rnd.Next(-20, 21); }
+            get { return rnd.Next(20, Height - 40); }
         }
         
         /// <summary>
@@ -40,7 +53,8 @@ namespace Asteroids
         /// </summary>
         public static int Speed
         {
-            get { return (Width + Height) / 60; }
+            //get { return (Width + Height) / 60; }
+            get { return TypicalSize; }
         }
         
         /// <summary>
@@ -64,17 +78,16 @@ namespace Asteroids
             
             // Создаем объект (поверхность рисования) и связываем его с формой
             // Запоминаем размеры формы
-            Width = 800; // form.Width;
-            Height = 600; // form.Height;
+            Width = form.Width - 40;
+            Height = form.Height - 60;
 
             // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
             Buffer = _context.Allocate(g, new Rectangle(10, 10, Width, Height));
 
             Load();
-
-            Timer timer = new Timer {Interval = 100};
+            
             timer.Start();
-            timer.Tick += Timer_Tick;
+            
 
         }
 
@@ -84,7 +97,7 @@ namespace Asteroids
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void Timer_Tick(object sender, EventArgs e)
+        public static void Timer_Tick(object sender, EventArgs e)
         {
             Draw();
             Update();
@@ -96,10 +109,37 @@ namespace Asteroids
         public static void Draw()
         {
             Buffer.Graphics.Clear(Color.Black);
-            foreach (BaseObject obj in _objs)
-                obj.Draw();
-            Buffer.Render();
 
+            foreach (BaseObject obj in _objsBackgound)
+                obj.Draw();
+
+            foreach (BaseObject obj in _objsInteraction)
+                obj.Draw();
+
+            foreach (BaseObject obj in _objsTranspost)
+                obj.Draw();
+
+            try
+            {
+                foreach (BaseObject obj in _objsBullets)
+                    obj.Draw();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                // throw;
+            }
+
+            try
+            {
+                Buffer.Render();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                // throw;
+            }
+            
         }
 
         /// <summary>
@@ -107,36 +147,80 @@ namespace Asteroids
         /// </summary>
         public static void Update()
         {
-            foreach (BaseObject obj in _objs)
+            foreach (BaseObject obj in _objsBackgound)
                 obj.Update();
+
+            foreach (BaseObject obj in _objsInteraction)
+                obj.Update();
+
+            foreach (BaseObject obj in _objsTranspost)
+                obj.Update();
+
+            try
+            {
+                foreach (BaseObject obj in _objsBullets)
+                    obj.Update();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                // throw;
+            }
         }
 
         /// <summary>
         /// Array of objects
         /// </summary>
-        public static BaseObject[] _objs;
+        //public static BaseObject[] _objs;
+        public static List<BaseObject> _objsBackgound;
+        public static List<BaseObject> _objsInteraction;
+        public static List<BaseObject> _objsTranspost;
+        public static List<BaseObject> _objsBullets;
 
         /// <summary>
         /// Method Load
         /// </summary>
         public static void Load()
         {
-            int qty = 60;
-            _objs = new BaseObject[qty + 1];
-            
-            for (int i = 0; i < _objs.Length / 4; i++)
-                _objs[i] = new BaseObject(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(5, 5));
+            _objsBackgound = new List<BaseObject>();
+            _objsBullets = new List<BaseObject>();
+            _objsInteraction = new List<BaseObject>();
+            _objsTranspost = new List<BaseObject>();
 
-            for (int i = _objs.Length / 4; i < _objs.Length / 4 * 2; i++)
-                _objs[i] = new Star(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(3, 3));
+            int qty = 40;
+            int qtyTypes = 4;
 
-            for (int i = _objs.Length / 4 * 2; i < _objs.Length / 4 * 3; i++)
-                _objs[i] = new UFO(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(10, 10));
+            int qtyObjects = qty / qtyTypes;
 
-            for (int i = _objs.Length / 4 * 3; i < _objs.Length; i++)
-                _objs[i] = new Asteroid(new Point(StartX, StartY), new Point(SplashScreen.rnd.Next(-Speed, Speed), SplashScreen.rnd.Next(-Speed, Speed)), new Size(6, 8));
+            for (int i = 0; i < 15; i++)
+            {
+                _objsBackgound.Add(new Star(new Point(StartX, StartY),
+                    new Point(SplashScreen.rnd.Next(TypicalSize), 0),
+                    new Size(3, 3)));
 
-            _objs[qty] = new SplashScreenLabels(new Point(0, 0), new Point(0, 0), new Size(0, 0));
+                _objsBackgound.Add(new Circle(new Point(StartX, StartY),
+                    new Point(SplashScreen.rnd.Next(Speed), 0),
+                    new Size(5, 5)));
+            }
+
+            for (int i = 0; i < 7; i++)
+            {
+                _objsInteraction.Add(new UFO(new Point(StartX, StartY),
+                    new Point(SplashScreen.rnd.Next(Speed), 0),
+                    new Size(10, 10)));
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+            _objsInteraction.Add(new Asteroid(new Point(StartX, StartY),
+                    new Point(SplashScreen.rnd.Next(Speed), 0),
+                    new Size(6, 8)));
+            }
+
+            _objsBackgound.Add(new SplashScreenLabels(new Point(0, 0), new Point(0, 0), new Size(0, 0)));
+            _objsTranspost.Add(new Transport(new Point(Height / 2, 20), new Point(0, 0), new Size(64, 64)));
+            //_objsBullets.Add(new Bullet(new Point(Transport.positionX + 65, Transport.positionY + 32),
+            //    new Point(Transport.positionX + 65, Transport.positionY + 32), new Size(5, 5)));
         }
     }
 }
