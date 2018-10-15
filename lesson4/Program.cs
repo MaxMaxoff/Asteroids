@@ -18,8 +18,8 @@ namespace lesson4
                 {"three",3 },
             };
 
-            var d = dict.OrderBy(delegate(KeyValuePair<string,int> pair) { return pair.Value; });
-            // var d = dict.OrderBy(pair => pair.Value);
+            // var d = dict.OrderBy(delegate(KeyValuePair<string,int> pair) { return pair.Value; });
+            var d = dict.OrderBy(pair => pair.Value);
 
             foreach (var pair in d)
             {
