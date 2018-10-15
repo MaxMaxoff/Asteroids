@@ -114,27 +114,10 @@ namespace Asteroids
             foreach (BaseObject obj in _objsTranspost)
                 obj.Draw();
 
-            try
-            {
-                foreach (BaseObject obj in _objsBullets)
-                    obj.Draw();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                // throw;
-            }
+            foreach (BaseObject obj in _objsBullets)
+                obj.Draw();
+            Buffer.Render();
 
-            try
-            {
-                Buffer.Render();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                // throw;
-            }
-            
         }
 
         /// <summary>
@@ -161,13 +144,16 @@ namespace Asteroids
                         if (obj.Collision(bullet))
                         {
                             _objsInteraction.RemoveAt(_objsInteraction.IndexOf(obj));
-
+                            _events += Attack;
+                            
                             if (obj is Asteroid)
                                 AddAsteroid(1);
                             else if (obj is UFO)
                                 AddUFO(1);
                             else if (obj is Healthy)
                                 AddHealthy(1);
+
+                            _events += ObjectAdded;
 
                             _objsBullets.RemoveAt(_objsBullets.IndexOf(bullet));
                             score++;
@@ -177,7 +163,7 @@ namespace Asteroids
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                // Console.WriteLine(e);
                 // throw;
             }
 
@@ -213,7 +199,7 @@ namespace Asteroids
 
                             if (health <= 0)
                             {
-                                _events += Transport.Die;
+                                _events += TransportDied;
                                 _objsTranspost.RemoveAt(_objsTranspost.IndexOf(transport));
                                 Form.ActiveForm.Close();
                             }
@@ -225,7 +211,7 @@ namespace Asteroids
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                // Console.WriteLine(e);
                 // throw;
             }
 
@@ -236,7 +222,7 @@ namespace Asteroids
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                // Console.WriteLine(e);
                 // throw;
             }
         }
@@ -412,6 +398,15 @@ namespace Asteroids
         public static void ObjectAdded(string message)
         {
             Console.WriteLine($"{DateTime.Now}: {message} added");
+        }
+        
+        /// <summary>
+        /// Method transport died added to event
+        /// </summary>
+        /// <param name="message">text message to event</param>
+        public static void TransportDied(string message)
+        {
+            Console.WriteLine($"{DateTime.Now}: {message} transport died");
         }
     }
 }

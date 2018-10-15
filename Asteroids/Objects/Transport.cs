@@ -80,6 +80,7 @@ namespace Asteroids.Objects
                 case Keys.Space:
                     SplashScreen._objsBullets.Add(new Bullet(new Point(Transport.positionX + 65, Transport.positionY + 32),
                             new Point(Transport.positionX + 65, Transport.positionY + 32), new Size(3, 3)));
+                    SplashScreen._events += SplashScreen.NewBullet;
                     break;
                 default:
                     break;
