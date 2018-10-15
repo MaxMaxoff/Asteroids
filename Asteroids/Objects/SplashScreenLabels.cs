@@ -22,6 +22,7 @@ namespace Asteroids
             SplashScreen.Buffer.Graphics.DrawString("Автор: Максим Торопов", new Font(FontFamily.GenericSansSerif, 9, FontStyle.Regular), new SolidBrush(Color.Aqua), 10, SplashScreen.Height - 40);
             SplashScreen.Buffer.Graphics.DrawString($"Score: {SplashScreen.score}", new Font(FontFamily.GenericSansSerif, 9, FontStyle.Regular), new SolidBrush(Color.Aqua), 10, SplashScreen.Height - 30);
             SplashScreen.Buffer.Graphics.DrawString($"Health: {SplashScreen.health}", new Font(FontFamily.GenericSansSerif, 9, FontStyle.Regular), new SolidBrush(Color.Aqua), 10, SplashScreen.Height - 20);
+            // SplashScreen.Buffer.Graphics.DrawString($"Asteroids qty: {SplashScreen.gameRound}", new Font(FontFamily.GenericSansSerif, 9, FontStyle.Regular), new SolidBrush(Color.Aqua), 10, SplashScreen.Height - 10);
         }
 
         /// <summary>
