@@ -11,6 +11,8 @@ namespace Asteroids
         private static BufferedGraphicsContext _context;
         public static BufferedGraphics Buffer;
 
+        public static event Action<string> _events;
+
         /// <summary>
         /// Properties of SplashScreen field
         /// </summary>
@@ -28,6 +30,7 @@ namespace Asteroids
         public static int score;
         public static int health;
         public const int baseHealth = 100;
+        public static int gameRound = 0;
 
         public static Random rnd;
 
@@ -80,6 +83,8 @@ namespace Asteroids
             Buffer = _context.Allocate(g, new Rectangle(10, 10, Width, Height));
 
             Load();
+            
+            _events += Status;
         }
 
         /// <summary>
@@ -92,6 +97,14 @@ namespace Asteroids
         {
             Draw();
             Update();
+            // _events("Current Status");
+            //_events -= Status;
+            //_events -= Attack;
+            //_events -= Damage;
+            //_events -= ObjectAdded;
+            //_events -= HealyIncreased;
+            //_events -= NewBullet;
+
         }
 
         /// <summary>
@@ -110,27 +123,10 @@ namespace Asteroids
             foreach (BaseObject obj in _objsTranspost)
                 obj.Draw();
 
-            try
-            {
-                foreach (BaseObject obj in _objsBullets)
-                    obj.Draw();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                // throw;
-            }
+            foreach (BaseObject obj in _objsBullets)
+                obj.Draw();
+            Buffer.Render();
 
-            try
-            {
-                Buffer.Render();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                // throw;
-            }
-            
         }
 
         /// <summary>
@@ -152,83 +148,90 @@ namespace Asteroids
                 foreach (BaseObject obj in _objsInteraction)
                 {
                     obj.Update();
+
+                    // Bullets & Interaction objects like UFO&Healthy
                     foreach (BaseObject bullet in _objsBullets)
-                    {
                         if (obj.Collision(bullet))
                         {
                             _objsInteraction.RemoveAt(_objsInteraction.IndexOf(obj));
+                            _objsBullets.RemoveAt(_objsBullets.IndexOf(bullet));
+                            _events += Attack;
+                            score++;
 
-                            if (obj is Asteroid)
-                                AddAsteroid(1);
-                            else if (obj is UFO)
+                            if (obj is UFO)
                                 AddUFO(1);
                             else if (obj is Healthy)
                                 AddHealthy(1);
 
-                            _objsBullets.RemoveAt(_objsBullets.IndexOf(bullet));
-                            score++;
+                            _events += ObjectAdded;
                         }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                // throw;
-            }
 
-            try
-            {
-                foreach (BaseObject obj in _objsInteraction)
-                {
-                    obj.Update();
+                    // Transport & Interaction objects like UFO&Healthy
                     foreach (BaseObject transport in _objsTranspost)
-                    {
                         if (obj.Collision(transport))
                         {
                             _objsInteraction.RemoveAt(_objsInteraction.IndexOf(obj));
-                            if (obj is Asteroid)
-                            {
-                                health -= 50;
-                                AddAsteroid(1);
-                            }
-                            else if (obj is UFO)
+                            if (obj is UFO)
                             {
                                 health -= 20;
+                                _events += Damage;
                                 AddUFO(1);
                             }
                             else if (obj is Healthy)
                             {
                                 health += 10;
+                                _events += HealyIncreased;
                                 if (health > baseHealth) health = baseHealth;
                                 AddHealthy(1);
                             }
 
                             if (health <= 0)
-                            {
-                                _objsTranspost.RemoveAt(_objsTranspost.IndexOf(transport));
-                                Form.ActiveForm.Close();
-                            }
+                                GameOver();
 
                             score++;
                         }
-                    }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                // throw;
-            }
 
-            try
-            {
+                foreach (BaseObject obj in _objsAsteroids)
+                {
+                    obj.Update();
+
+                    // Bullets & Asteroids
+                    foreach (BaseObject bullet in _objsBullets)
+                        if (obj.Collision(bullet))
+                        {
+                            _objsAsteroids.RemoveAt(_objsAsteroids.IndexOf(obj));
+                            _objsBullets.RemoveAt(_objsBullets.IndexOf(bullet));
+                            _events += Attack;
+                            score++;
+
+                            if (_objsAsteroids.Count == 0)
+                                AddAsteroid(8 + gameRound);
+                        }
+
+                    // Transport & Asteroids
+                    foreach (BaseObject transport in _objsTranspost)
+                        if (obj.Collision(transport))
+                        {
+                            _objsAsteroids.RemoveAt(_objsAsteroids.IndexOf(obj));
+                            health -= 50;
+                            _events += Damage;
+
+                            if (_objsAsteroids.Count == 0)
+                                AddAsteroid(8 + gameRound);
+
+                            if (health <= 0)
+                                GameOver();
+                            score++;
+                        }
+                }
+
                 foreach (BaseObject obj in _objsBullets)
                     obj.Update();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                // Console.WriteLine(e);
                 // throw;
             }
         }
@@ -241,6 +244,7 @@ namespace Asteroids
         public static List<BaseObject> _objsInteraction;
         public static List<BaseObject> _objsTranspost;
         public static List<BaseObject> _objsBullets;
+        public static List<BaseObject> _objsAsteroids;
 
         /// <summary>
         /// Method Load
@@ -258,6 +262,8 @@ namespace Asteroids
             
             _objsInteraction = new List<BaseObject>();
             AddUFO(7);
+
+            _objsAsteroids = new List<BaseObject>();
             AddAsteroid(8);
             
             _objsTranspost = new List<BaseObject>();
@@ -274,10 +280,13 @@ namespace Asteroids
         /// <param name="n">qty of Stars</param>
         public static void AddStar(int n)
         {
-            for(int i = 0; i < n; i++)
-            _objsBackgound.Add(new Star(new Point(StartX, StartY),
-                new Point(rnd.Next(Speed), 0),
-                new Size(3, 3)));
+            for (int i = 0; i < n; i++)
+            {
+                _objsBackgound.Add(new Star(new Point(StartX, StartY),
+                    new Point(rnd.Next(Speed), 0),
+                    new Size(3, 3)));
+            }
+            _events += ObjectAdded;
         }
 
         /// <summary>
@@ -287,9 +296,12 @@ namespace Asteroids
         public static void AddCircle(int n)
         {
             for (int i = 0; i < n; i++)
+            {
                 _objsBackgound.Add(new Circle(new Point(StartX, StartY),
                     new Point(rnd.Next(Speed), 0),
                     new Size(5, 5)));
+            }
+            _events += ObjectAdded;
         }
 
         /// <summary>
@@ -299,9 +311,12 @@ namespace Asteroids
         public static void AddUFO(int n)
         {
             for (int i = 0; i < n; i++)
+            {
                 _objsInteraction.Add(new UFO(new Point(StartX, StartY),
                     new Point(rnd.Next(Speed), 0),
                     new Size(10, 10)));
+            }
+            _events += ObjectAdded;
         }
 
         /// <summary>
@@ -310,10 +325,15 @@ namespace Asteroids
         /// <param name="n">qty of Asteroids</param>
         public static void AddAsteroid(int n)
         {
-            for (int i = 0; i < n; i++)
-                _objsInteraction.Add(new Asteroid(new Point(StartX, StartY),
-                    new Point(rnd.Next(Speed), 0),
-                    new Size(64, 64)));
+            if (_objsAsteroids.Count == 0)
+                for (int i = 0; i < n; i++)
+                {
+                    _objsInteraction.Add(new Asteroid(new Point(StartX, StartY),
+                        new Point(rnd.Next(Speed), 0),
+                        new Size(64, 64)));
+                }
+            _events += ObjectAdded;
+            gameRound++;
         }
 
         /// <summary>
@@ -323,9 +343,12 @@ namespace Asteroids
         public static void AddHealthy(int n)
         {
             for (int i = 0; i < n; i++)
+            {
                 _objsInteraction.Add(new Healthy(new Point(StartX, StartY),
                     new Point(rnd.Next(Speed), 0),
                     new Size(43, 43)));
+            }
+            _events += ObjectAdded;
         }
 
         /// <summary>
@@ -334,6 +357,81 @@ namespace Asteroids
         public static void AddTransport()
         {
             _objsTranspost.Add(new Transport(new Point(20, Height / 2), new Point(0, 0), new Size(64, 64)));
+            _events += ObjectAdded;
+        }
+
+        /// <summary>
+        /// Method current transport status to event
+        /// </summary>
+        /// <param name="message">text message to event</param>
+        public static void Status(string message)
+        {
+            Console.WriteLine($"{DateTime.Now}: {message} current transport health: {health}");
+        }
+
+        /// <summary>
+        /// Method sucessfull attack to event
+        /// </summary>
+        /// <param name="message">text message to event</param>
+        public static void Attack(string message)
+        {
+            Console.WriteLine($"{DateTime.Now}: {message} attack on object, score: {score}");
+        }
+
+        /// <summary>
+        /// Method show new bullet to event
+        /// </summary>
+        /// <param name="message">text message to event</param>
+        public static void NewBullet(string message)
+        {
+            Console.WriteLine($"{DateTime.Now}: {message} new bullet");
+        }
+
+        /// <summary>
+        /// Metohd getting damage to event
+        /// </summary>
+        /// <param name="message">text message to event</param>
+        public static void Damage(string message)
+        {
+            Console.WriteLine($"{DateTime.Now}: {message} transport damaged, current health: {health}");
+        }
+
+        /// <summary>
+        /// Method getting healthy to event
+        /// </summary>
+        /// <param name="message">text message to event</param>
+        public static void HealyIncreased(string message)
+        {
+            Console.WriteLine($"{DateTime.Now}: {message} transport healthy increased, current health: {health}");
+        }
+
+        /// <summary>
+        /// Method object added to event
+        /// </summary>
+        /// <param name="message">text message to event</param>
+        public static void ObjectAdded(string message)
+        {
+            Console.WriteLine($"{DateTime.Now}: {message} added");
+        }
+        
+        /// <summary>
+        /// Method transport died added to event
+        /// </summary>
+        /// <param name="message">text message to event</param>
+        public static void TransportDied(string message)
+        {
+            Console.WriteLine($"{DateTime.Now}: {message} transport died");
+        }
+
+        /// <summary>
+        /// Method GameOver
+        /// </summary>
+        public static void GameOver()
+        {
+            _events += TransportDied;
+            _objsTranspost.Clear();
+            gameRound = 0;
+            Form.ActiveForm.Close();
         }
     }
 }
