@@ -1,8 +1,9 @@
 ﻿using System.Drawing;
+using Asteroids.Interfaces;
 
 namespace Asteroids
 {
-    public abstract class BaseObject
+    public abstract class BaseObject: ICollision
     {
         /// <summary>
         /// default parameters of object
@@ -10,6 +11,16 @@ namespace Asteroids
         protected Point Pos;
         protected Point Dir;
         protected Size Size;
+
+        /// <summary>
+        /// Property Position
+        /// </summary>
+        public Point Position
+        {
+            get { return Pos; }
+            set { Pos = value; }
+
+        }
 
         /// <summary>
         /// Default ctor
@@ -22,6 +33,18 @@ namespace Asteroids
             Pos = pos;
             Dir = dir;
             Size = size;
+        }
+
+        public Rectangle Rect => new Rectangle(Pos, Size);
+
+        /// <summary>
+        /// Method Collision for calculation collision
+        /// </summary>
+        /// <param name="obj">Object </param>
+        /// <returns></returns>
+        public bool Collision(ICollision obj)
+        {
+            return obj.Rect.IntersectsWith(this.Rect);
         }
 
         /// <summary>

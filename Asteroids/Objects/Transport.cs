@@ -1,64 +1,81 @@
-﻿using System.CodeDom;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
+using Asteroids.Interfaces;
 
 namespace Asteroids.Objects
 {
     class Transport : BaseObject
     {
-
+        /// <summary>
+        /// Image for transport
+        /// </summary>
         static Image transport = Asteroids.Properties.Resources.transport;
+
+        /// <summary>
+        /// Direction (Vector)
+        /// </summary>
         private static int MoveX, MoveY;
+
+        /// <summary>
+        /// Position of Transport for Bullets
+        /// </summary>
         public static int positionX, positionY;
 
-        public static int PositionX
-        {
-            set { positionX = value; }
-        }
-
-        public static int PositionY
-        {
-            set { positionY = value; }
-
-        }
-
+        /// <summary>
+        /// Default Ctor
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="dir"></param>
+        /// <param name="size"></param>
         public Transport(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
         }
 
+        /// <summary>
+        /// Method draw
+        /// </summary>
         public override void Draw()
         {
             SplashScreen.Buffer.Graphics.DrawImage(transport, Pos.X, Pos.Y);
         }
 
+        /// <summary>
+        /// Method Update
+        /// </summary>
         public override void Update()
         {
-            Pos.X = MoveX;
-            Pos.Y = MoveY;
+            Pos.X += MoveX;
+            Pos.Y += MoveY;
             positionX = Pos.X;
             positionY = Pos.Y;
 
-            //if (Pos.X <= 0) Pos.X = 1;
-            //if (Pos.Y <= 0) Pos.Y = 1;
-            //if (Pos.X >= SplashScreen.Width) Pos.X = SplashScreen.Width - 65;
-            //if (Pos.Y >= SplashScreen.Height) Pos.Y = SplashScreen.Height - 65;
+            if (Pos.X <= 0) Pos.X = 1;
+            if (Pos.Y <= 0) Pos.Y = 1;
+            if (Pos.X >= SplashScreen.Width - 40) Pos.X = SplashScreen.Width - 41;
+            if (Pos.Y >= SplashScreen.Height - 40) Pos.Y = SplashScreen.Height - 41;
         }
 
-        public static void UpdateOnKeyPress(System.Windows.Forms.KeyEventArgs e)
+        /// <summary>
+        /// Method for KeyDown event
+        /// </summary>
+        /// <param name="e">KeyEventArgs</param>
+        public static void UpdateOnKeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
+            int speed = 10;
+            
+            switch (e.KeyData)
             {
                 case Keys.Up:
-                    MoveY -= 10;
+                    MoveY = -speed;
                     break;
                 case Keys.Down:
-                    MoveY += 10;
+                    MoveY = speed;
                     break;
                 case Keys.Left:
-                    MoveX -= 10;
+                    MoveX = -speed;
                     break;
                 case Keys.Right:
-                    MoveX += 10;
+                    MoveX = speed;
                     break;
                 case Keys.Space:
                     SplashScreen._objsBullets.Add(new Bullet(new Point(Transport.positionX + 65, Transport.positionY + 32),
@@ -67,11 +84,31 @@ namespace Asteroids.Objects
                 default:
                     break;
             }
+        }
 
-            if (MoveX <= 0) MoveX = 1;
-            if (MoveY <= 0) MoveY = 1;
-            if (MoveX >= SplashScreen.Width - 40) MoveX = SplashScreen.Width - 41;
-            if (MoveY >= SplashScreen.Height - 40) MoveY = SplashScreen.Height - 41;
+        /// <summary>
+        /// Method for KeyUp event
+        /// </summary>
+        /// <param name="e">KeyEventArgs</param>
+        public static void UpdateOnKeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyData)
+            {
+                case Keys.Up:
+                    MoveY = 0;
+                    break;
+                case Keys.Down:
+                    MoveY = 0;
+                    break;
+                case Keys.Left:
+                    MoveX = 0;
+                    break;
+                case Keys.Right:
+                    MoveX = 0;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

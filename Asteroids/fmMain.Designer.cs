@@ -85,11 +85,7 @@ namespace Asteroids
             this.Name = "fmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Asteroids";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.fmMain_FormClosing);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fmMain_KeyDown);
-            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fmMain_KeyPress);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.fmMain_KeyUp);
             this.ResumeLayout(false);
 
         }

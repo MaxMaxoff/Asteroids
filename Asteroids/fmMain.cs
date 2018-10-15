@@ -26,41 +26,32 @@ namespace Asteroids
             Form form = new Form();
             form.Width = 900;
             form.Height = 600;
-            if (form.Width > 1000 || form.Width < 0 || form.Height > 1000 || form.Height < 0)
-                throw new ArgumentOutOfRangeException("Некорректный размер окна игры");
+            if (form.Width > 1200 || form.Width < 0 || form.Height > 1000 || form.Height < 0)
+                throw new ArgumentOutOfRangeException("Incorrect Screen size!");
 
-            form.KeyDown += form_KeyDown;
+            form.KeyDown += Transport.UpdateOnKeyDown;
+            form.KeyUp += Transport.UpdateOnKeyUp;
+            form.FormClosing += form_FormClosing;
 
             form.Show();
             SplashScreen.Init(form);
             SplashScreen.Draw();
+            
+            SplashScreen.timer.Stop();
             SplashScreen.timer.Tick -= SplashScreen.Timer_Tick;
+
+            SplashScreen.timer.Start();
             SplashScreen.timer.Tick += SplashScreen.Timer_Tick;
         }
 
-        private void form_KeyDown(object sender, KeyEventArgs e)
+        private void form_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Transport.UpdateOnKeyPress(e);
-        }
-
-        private void fmMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-
-        }
-
-        private void fmMain_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void fmMain_KeyPress(object sender, KeyPressEventArgs e)
-        {
-
-        }
-
-        private void fmMain_KeyUp(object sender, KeyEventArgs e)
-        {
-
+            SplashScreen.timer.Stop();
+            MessageBox.Show($"Game Over. Your score is {SplashScreen.score}");
+            SplashScreen._objsBullets.Clear();
+            SplashScreen._objsBackgound.Clear();
+            SplashScreen._objsInteraction.Clear();
+            SplashScreen._objsTranspost.Clear();
         }
     }
 }
