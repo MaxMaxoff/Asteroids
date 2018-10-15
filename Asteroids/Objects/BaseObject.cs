@@ -5,6 +5,8 @@ namespace Asteroids
 {
     public abstract class BaseObject: ICollision
     {
+        public delegate void Message();
+
         /// <summary>
         /// default parameters of object
         /// </summary>

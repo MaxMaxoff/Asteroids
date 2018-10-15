@@ -110,5 +110,12 @@ namespace Asteroids.Objects
                     break;
             }
         }
+
+        public void Die()
+        {
+            MessageDie?.Invoke();
+        }
+
+        public static event Message MessageDie;
     }
 }
